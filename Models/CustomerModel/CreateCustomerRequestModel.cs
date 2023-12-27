@@ -1,0 +1,50 @@
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using renato_movie_store.Util;
+using System.Globalization;
+
+namespace renato_movie_store.Models.CustomerModel
+{
+    public class CreateCustomerRequestModel
+    {
+        [JsonProperty("customer_id")]
+        public string CustomerId { get; set; }
+
+        [JsonProperty("name")]
+        public string Name { get; set; }
+
+        [JsonProperty("genero")]
+        public string Genero { get; set; }
+
+        [JsonProperty("email")]
+        public string Email { get; set; }
+
+        [JsonProperty("age")]
+        public int Age { get; set; }
+
+        [JsonProperty("cpf")]
+        public int CPF { get; set; }
+
+        [JsonProperty("address")]
+        public string Address { get; set; }
+
+        [JsonProperty("city")]
+        public string City { get; set; }
+
+        [JsonProperty("country")]
+        public string Country { get; set; }
+
+        [JsonProperty("phone_number")]
+        public int PhoneNumber { get; set; }
+
+        [JsonConverter(typeof(IsoDateConverter))]
+        [JsonProperty("create_date")]
+        public DateTime CreateDate { get; set; }
+
+        [JsonConverter(typeof(IsoDateConverter))]
+        [JsonProperty("update_date")]
+        public DateTime? UpdateDate { get; set; }
+    }
+
+
+}
