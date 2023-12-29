@@ -1,8 +1,12 @@
-﻿namespace renato_movie_store.Context.Model
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
+
+namespace renato_movie_store.Context.Model
 {
     public class Customer
     {
         public string CustomerId { get; set; }
+        public string Status { get; set; }
         public string Name { get; set; }
         public string Genero { get; set; }
         public string Email { get; set; }

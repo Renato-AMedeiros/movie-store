@@ -1,17 +1,14 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.SecurityTokenService;
+
 using Newtonsoft.Json;
 using renato_movie_store.Context;
 using renato_movie_store.Context.Model;
 using renato_movie_store.Filters;
 using renato_movie_store.Models.OMDbModel;
-using System.Collections.Generic;
-using System.Text.Json.Nodes;
-using System.Xml.Linq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using renato_movie_store.Util;
 
-namespace renato_movie_store.Services
+namespace renato_movie_store.Models.Services
 {
     public class OMDbAPIService
     {
@@ -44,7 +41,7 @@ namespace renato_movie_store.Services
                     }
                     else
                     {
-                        throw new BadRequestException("error host.");
+                        throw new BadRequestException("error host.", "OMDbAPI.https_error");
                     }
                 }
                 catch (Exception ex)
@@ -78,7 +75,7 @@ namespace renato_movie_store.Services
                     }
                     else
                     {
-                        throw new BadRequestException("error host.");
+                        throw new BadRequestException("error host.", "OMDbAPI.https_error");
                     }
                 }
                 catch (Exception ex)
@@ -102,32 +99,55 @@ namespace renato_movie_store.Services
 
             if (customer != null)
             {
+                if (customer.Age < 14)
+                {
+                    throw new ForbiddenException("user under 14 years old", "OMDbAPI.user_under_14_years_old");
+                }
+
+                var activeRentalsCount = _movieStoreDbContext.RentalHistories.Count(x => x.CustomerId == model.CustomerId && x.RentId == RentStatusEnum.ACTIVE);
+
+                if (activeRentalsCount >= 2)
+                {
+                    throw new ForbiddenException("maximum rentals reached", "OMDbAPI.maximum_rentals_reached");
+                }
+
+                var rentedMovie = _movieStoreDbContext.RentalHistories.Any(x => x.ImdbId == queryMovie.ImdbID && x.RentId == RentStatusEnum.ACTIVE);
+
+                if (rentedMovie)
+                throw new ForbiddenException("movie already rented", "OMDbAPI.movie_already_rented");
+
                 var responseSerialize = JsonConvert.SerializeObject(queryMovie);
                 var response = JsonConvert.DeserializeObject<OMDbAPIFilter>(responseSerialize);
 
-                var rentHisotory = new RentHistory
+                var rentHistory = new RentHistory
                 {
                     ImdbId = response.ImdbID,
                     Title = response.Title,
                     Type = response.Type
                 };
 
-                rentHisotory.RentId = model.RentId;
-                rentHisotory.Name = model.Name;
-                rentHisotory.CreateDate = DateTime.UtcNow;
-                rentHisotory.Name = model.Name;
-                rentHisotory.CPF = model.CPF;
-                rentHisotory.CustomerId = model.CustomerId;
-                rentHisotory.ExpireDate = model.ExpireDate;
+                rentHistory.RentId = model.RentId;
+                rentHistory.Name = model.Name;
+                rentHistory.CreateDate = DateTime.UtcNow;
+                rentHistory.Name = model.Name;
+                rentHistory.CPF = model.CPF;
+                rentHistory.CustomerId = model.CustomerId;
+                rentHistory.ExpireDate = model.ExpireDate;
 
-                _movieStoreDbContext.RentalHistories.Add(rentHisotory);
+                _movieStoreDbContext.RentalHistories.Add(rentHistory);
+           
+                if(customer.Status == CustomerStatusEnum.INACTIVE)
+                {
+                    customer.Status = CustomerStatusEnum.ACTIVE;
+                }
+
                 await _movieStoreDbContext.SaveChangesAsync();
 
-                return rentHisotory;
+                return rentHistory;
             }
             else
             {
-                throw new BadRequestException("customer not exist"); ;
+                throw new BadRequestException("customer not exist", "OMDbAPI.customer_does_not_exist"); ;
             }
         }
 
@@ -183,13 +203,10 @@ namespace renato_movie_store.Services
             var rent = await _movieStoreDbContext.RentalHistories.FirstOrDefaultAsync(x => x.RentId == rentId);
 
             if (rent != null)
-                throw new BadRequestException("rent not exist");
+                throw new BadRequestException("rent not exist", "OMDbAPI.rent_does_not_exist");
 
             _movieStoreDbContext.RentalHistories.Remove(rent);
             await _movieStoreDbContext.SaveChangesAsync();
-
-  
-
         }
 
     }

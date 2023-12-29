@@ -2,7 +2,7 @@
 using renato_movie_store.Filters;
 using renato_movie_store.Mappings;
 using renato_movie_store.Models.CustomerModel;
-using renato_movie_store.Services;
+using renato_movie_store.Models.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -59,7 +59,7 @@ namespace renato_movie_store.Controllers
         }
 
         [HttpPut("{customerid}")]
-        public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerModel model, string customerId)
+        public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerRequestModel model, string customerId)
         {
             var customer = await _customerService.UpdateCustomer(model, customerId);
 

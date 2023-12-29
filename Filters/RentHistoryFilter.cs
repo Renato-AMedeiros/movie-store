@@ -1,8 +1,14 @@
-﻿namespace renato_movie_store.Filters
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Xml.Linq;
+
+namespace renato_movie_store.Filters
 {
     public class RentHistoryFilter
     {
         public string RentId { get; set; }
+
+        [FromQuery(Name = "status")]
+        public string Status { get; set; }
 
         public string Name { get; set; }
 

@@ -1,4 +1,4 @@
-using renato_movie_store.Services;
+using renato_movie_store.Models.Services;
 
 namespace renato_movie_store
 {

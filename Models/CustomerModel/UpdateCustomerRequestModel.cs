@@ -3,7 +3,7 @@ using renato_movie_store.Util;
 
 namespace renato_movie_store.Models.CustomerModel
 {
-    public class UpdateCustomerModel
+    public class UpdateCustomerRequestModel
     {
         [JsonProperty("name")]
         public string Name { get; set; }

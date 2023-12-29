@@ -6,6 +6,7 @@ namespace renato_movie_store.Filters
     public class OMDbAPIFilter
     {
 
+
         [JsonProperty("customerId")]
         public string CustomerId { get; set; }
 

@@ -1,12 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.SecurityTokenService;
 using renato_movie_store.Context;
 using renato_movie_store.Context.Model;
 using renato_movie_store.Filters;
 using renato_movie_store.Models.CustomerModel;
+using renato_movie_store.Util;
 
-
-namespace renato_movie_store.Services
+namespace renato_movie_store.Models.Services
 {
     public class CustomerService
     {
@@ -18,6 +17,14 @@ namespace renato_movie_store.Services
 
         public async Task<Customer> CreateCustomer(CreateCustomerRequestModel model)
         {
+
+            var validEmail = _movieStoreDbContext.Customers.Any(x => x.Email == model.Email);
+
+            if (validEmail)
+                throw new ConflictException("email already exists.", "customer.email_already_registered");
+
+
+
             var customer = new Customer()
             {
                 CustomerId = Guid.NewGuid().ToString(),
@@ -75,7 +82,7 @@ namespace renato_movie_store.Services
             var query = await _movieStoreDbContext.Customers.FirstOrDefaultAsync(x => x.CustomerId == customerId);
 
             if (query == null)
-                throw new BadRequestException("customer is inactive");
+                throw new BadRequestException("customer is inactive", "customer.is_inactive");
 
             return query;
         }
@@ -102,13 +109,13 @@ namespace renato_movie_store.Services
 
             if (customers.Count == 0)
             {
-                throw new BadRequestException("No customers found with the specified name.");
+                throw new BadRequestException("No customers found with the specified name.", "customers.does_not_existed");
             }
 
             return customers;
         }
 
-        public async Task<Customer> UpdateCustomer(UpdateCustomerModel model, string customerId)
+        public async Task<Customer> UpdateCustomer(UpdateCustomerRequestModel model, string customerId)
         {
             var customer = await GetCustomerById(customerId);
 
@@ -146,8 +153,16 @@ namespace renato_movie_store.Services
         {
             var customer = await GetCustomerById(customerId);
 
+            if(customer.Status == CustomerStatusEnum.ACTIVE)
+                throw new ForbiddenException("active user with rented movie", "customer.active_user_with_rented_movie");
+
             _movieStoreDbContext.Customers.Remove(customer);
             await _movieStoreDbContext.SaveChangesAsync();
         }
+
+
+
+
+
     }
 }
