@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using renato_movie_store.Context.Model;
+using renato_movie_store.Filters;
+using renato_movie_store.Mappings;
+using renato_movie_store.Models.OMDbModel;
 using renato_movie_store.Services;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace renato_movie_store.Controllers
 {
@@ -15,51 +17,54 @@ namespace renato_movie_store.Controllers
             _oMDbAPIService = oMDbAPIService;
         }
 
-        [HttpGet]
+        [HttpGet("{name}")]
         public async Task<IActionResult> GetMoviesByName([FromRoute] string name)
         {
-            var movieList = _oMDbAPIService.GetMoviesByName(name);
+            var movieList = await _oMDbAPIService.GetMoviesByName(name);
 
             return Ok(movieList);
-        }
+        }      
+        
+        
+        [HttpGet("rent/{customerId}")]
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        // GET api/<ValuesController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        public async Task<IActionResult> GetRentalsList([FromRoute] RentHistoryFilter filter, string customerId)
         {
-            return "value";
+            var rentalList = await _oMDbAPIService.GetRentalsList(filter, customerId);
+
+            var response =  rentalList.Select(RentHistoryMapping.RentHistoryMap).ToList();
+
+            return Ok(rentalList);
         }
 
-        // POST api/<ValuesController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+
+
+
+
+        [HttpPost("{imdbID}")]
+        public async Task<IActionResult> CreateMovieRental([FromRoute] string imdbID, [FromBody] CreateOMDbRequestModel model)
         {
+            var queryMovie = await _oMDbAPIService.GetMoviesByImdb(imdbID);
+
+            var request = await _oMDbAPIService.CreateMovieRental(model, queryMovie);
+
+            return Ok(request);
         }
 
-        // PUT api/<ValuesController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+
+
+        [HttpDelete("rent/{rentId}")]
+
+        public async Task<IActionResult> DeleteRent([FromRoute] string rentId)
         {
+
+            await _oMDbAPIService.DeleteRent(rentId);
+
+            return NoContent();
         }
 
-        // DELETE api/<ValuesController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+
+
+
     }
 }

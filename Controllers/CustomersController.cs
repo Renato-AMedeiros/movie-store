@@ -8,7 +8,7 @@ using renato_movie_store.Services;
 
 namespace renato_movie_store.Controllers
 {
-    [Route("v1/[customers]")]
+    [Route("v1/customers")]
     [ApiController]
     public class CustomersController : ControllerBase
     {

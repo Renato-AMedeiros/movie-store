@@ -1,8 +1,8 @@
-﻿namespace renato_movie_store.Context.Model
+﻿namespace renato_movie_store.Filters
 {
-    public class RentHistory
+    public class RentHistoryFilter
     {
-        public string RentId { get; set;}
+        public string RentId { get; set; }
 
         public string Name { get; set; }
 
@@ -21,6 +21,5 @@
         public DateTime? UpdateDate { get; set; }
 
         public DateTime? ExpireDate { get; set; }
-
     }
 }

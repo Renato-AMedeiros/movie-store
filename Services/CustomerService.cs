@@ -30,7 +30,7 @@ namespace renato_movie_store.Services
                 City = model.City,
                 Country = model.Country,
                 PhoneNumber = model.PhoneNumber,
-                CreateDate = model.CreateDate,
+                CreateDate = DateTime.UtcNow,
             };
 
             _movieStoreDbContext.Customers.Add(customer);

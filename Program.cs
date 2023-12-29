@@ -1,3 +1,4 @@
+using renato_movie_store.Services;
 
 namespace renato_movie_store
 {
@@ -13,6 +14,9 @@ namespace renato_movie_store
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            
+
+            builder.Services.AddScoped<OMDbAPIService>();
 
             var app = builder.Build();
 
@@ -22,6 +26,7 @@ namespace renato_movie_store
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+
 
             app.UseHttpsRedirection();
 

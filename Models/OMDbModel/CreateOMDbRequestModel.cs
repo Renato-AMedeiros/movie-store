@@ -1,16 +1,22 @@
 ﻿using Newtonsoft.Json;
 using renato_movie_store.Util;
 
-namespace renato_movie_store.Filters
+namespace renato_movie_store.Models.OMDbModel
 {
-    public class OMDbAPIFilter
+    public class CreateOMDbRequestModel
     {
+        [JsonProperty("rentId")]
+        public string RentId { get; set; }
 
-        [JsonProperty("customerId")]
+
+        [JsonProperty("cpf")]
+        public int CPF{ get; set; }
+
+        [JsonProperty("custumerId")]
         public string CustomerId { get; set; }
 
         [JsonProperty("name")]
-        public string Name{ get; set; }
+        public string Name { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }
@@ -75,9 +81,6 @@ namespace renato_movie_store.Filters
         [JsonProperty("response")]
         public string Response { get; set; }
 
-        [JsonProperty("cpf")]
-        public int CPF { get; set; }
-
         [JsonConverter(typeof(IsoDateConverter))]
         [JsonProperty("create_date")]
         public DateTime CreateDate { get; set; }
@@ -90,6 +93,7 @@ namespace renato_movie_store.Filters
         [JsonProperty("expire_date")]
         public DateTime? ExpireDate { get; set; }
     }
+
 
 }
 
