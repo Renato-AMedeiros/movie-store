@@ -121,8 +121,9 @@ namespace renatomoviestore.Migrations
 
             modelBuilder.Entity("renato_movie_store.Context.Model.RentHistory", b =>
                 {
-                    b.Property<string>("RentId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("RentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CPF")
                         .IsRequired()

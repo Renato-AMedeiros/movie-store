@@ -11,8 +11,8 @@ using renato_movie_store.Context;
 namespace renatomoviestore.Migrations
 {
     [DbContext(typeof(MovieStoreDbContext))]
-    [Migration("20240103195930_altercustomer")]
-    partial class altercustomer
+    [Migration("20240103205053_addedGuidRentId")]
+    partial class addedGuidRentId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -124,8 +124,9 @@ namespace renatomoviestore.Migrations
 
             modelBuilder.Entity("renato_movie_store.Context.Model.RentHistory", b =>
                 {
-                    b.Property<string>("RentId")
-                        .HasColumnType("varchar(255)");
+                    b.Property<Guid>("RentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
 
                     b.Property<string>("CPF")
                         .IsRequired()

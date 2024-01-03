@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace renato_movie_store.Context.Model
 {
@@ -6,7 +7,7 @@ namespace renato_movie_store.Context.Model
     {
 
         [Key]
-        public string RentId { get; set; }
+        public Guid RentId { get; set; }
 
         public string Status { get; set; }
 
@@ -25,11 +26,14 @@ namespace renato_movie_store.Context.Model
         public DateTime? UpdateDate { get; set; }
 
         public DateTime? ExpireDate { get; set; }
-
+        
 
 
 
         public Guid CustomerId { get; set; }
-        public Customer Customer { get; set; }
+
+        [JsonIgnore]
+        public virtual Customer? Customer { get; set; }
+        
     }
 }

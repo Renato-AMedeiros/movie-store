@@ -6,7 +6,7 @@ namespace renato_movie_store.Mappings.ModelsMappings
     public class RentHistoryMappingModel
     {
         [JsonProperty("rentId")]
-        public string RentId { get; set; }
+        public Guid RentId { get; set; }
 
         [JsonProperty("customer_name")]
         public string CustomerName { get; set; }

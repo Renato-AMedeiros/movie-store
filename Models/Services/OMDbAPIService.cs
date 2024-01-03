@@ -1,12 +1,13 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
-
 using Newtonsoft.Json;
 using renato_movie_store.Context;
 using renato_movie_store.Context.Model;
 using renato_movie_store.Filters;
 using renato_movie_store.Models.OMDbModel;
 using renato_movie_store.Util;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace renato_movie_store.Models.Services
 {
@@ -36,7 +37,7 @@ namespace renato_movie_store.Models.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var jsonString = await response.Content.ReadAsStringAsync();
-                        filter = JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
+                        filter = Newtonsoft.Json.JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
 
                     }
                     else
@@ -70,7 +71,7 @@ namespace renato_movie_store.Models.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var jsonString = await response.Content.ReadAsStringAsync();
-                        filter = JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
+                        filter = Newtonsoft.Json.JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
 
                     }
                     else
@@ -104,20 +105,30 @@ namespace renato_movie_store.Models.Services
                     throw new ForbiddenException("user under 14 years old", "OMDbAPI.user_under_14_years_old");
                 }
 
-                var activeRentalsCount = _movieStoreDbContext.RentalHistories.Count(x => x.CustomerId == model.CustomerId && x.RentId == RentStatusEnum.ACTIVE);
+                var activeRentalsCount = _movieStoreDbContext.RentalHistories.Count(x => x.CustomerId == model.CustomerId && x.Status == RentStatusEnum.ACTIVE);
 
                 if (activeRentalsCount >= 2)
                 {
                     throw new ForbiddenException("maximum rentals reached", "OMDbAPI.maximum_rentals_reached");
                 }
 
-                var rentedMovie = _movieStoreDbContext.RentalHistories.Any(x => x.ImdbId == queryMovie.ImdbID && x.RentId == RentStatusEnum.ACTIVE);
+                //se o filme ja ta alugado
+                var rentedMovie = _movieStoreDbContext.RentalHistories.Any(x => x.ImdbId == queryMovie.ImdbID && x.Status == RentStatusEnum.ACTIVE);
 
                 if (rentedMovie)
                 throw new ForbiddenException("movie already rented", "OMDbAPI.movie_already_rented");
 
                 var responseSerialize = JsonConvert.SerializeObject(queryMovie);
+                //var responseSerialize = JsonSerializer.Serialize(queryMovie, new JsonSerializerOptions
+                //{
+                //    ReferenceHandler = ReferenceHandler.Preserve                   
+                //});
                 var response = JsonConvert.DeserializeObject<OMDbAPIFilter>(responseSerialize);
+                //var response = JsonSerializer.Deserialize<OMDbAPIFilter>(responseSerialize, new JsonSerializerOptions
+                //{
+                //    ReferenceHandler = ReferenceHandler.Preserve
+                //    // Outras opções, se necessário
+                //});
 
                 var rentHistory = new RentHistory
                 {
@@ -126,13 +137,14 @@ namespace renato_movie_store.Models.Services
                     Type = response.Type
                 };
 
-                rentHistory.RentId = model.RentId;
+                rentHistory.RentId = Guid.NewGuid();
                 rentHistory.CustomerName = model.CustomerName;
                 rentHistory.CreateDate = DateTime.UtcNow;
                 rentHistory.CustomerName = model.CustomerName;
                 rentHistory.CPF = model.CPF;
                 rentHistory.CustomerId = model.CustomerId;
                 rentHistory.ExpireDate = model.ExpireDate;
+                rentHistory.Status = RentStatusEnum.ACTIVE;
 
                 _movieStoreDbContext.RentalHistories.Add(rentHistory);
            
@@ -141,7 +153,15 @@ namespace renato_movie_store.Models.Services
                     customer.Status = CustomerStatusEnum.ACTIVE;
                 }
 
-                await _movieStoreDbContext.SaveChangesAsync();
+                try
+                {
+                    await _movieStoreDbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+
+                    throw ex;
+                }
 
                 return rentHistory;
             }
@@ -198,7 +218,7 @@ namespace renato_movie_store.Models.Services
 
 
 
-        public async Task DeleteRent(string rentId)
+        public async Task DeleteRent(Guid rentId)
         {
             var rent = await _movieStoreDbContext.RentalHistories.FirstOrDefaultAsync(x => x.RentId == rentId);
 

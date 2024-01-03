@@ -5,7 +5,7 @@ namespace renato_movie_store.Filters
 {
     public class RentHistoryFilter
     {
-        public string RentId { get; set; }
+        public Guid RentId { get; set; }
 
         [FromQuery(Name = "status")]
         public string Status { get; set; }

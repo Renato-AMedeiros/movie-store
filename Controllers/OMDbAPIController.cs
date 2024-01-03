@@ -39,44 +39,44 @@ namespace renato_movie_store.Controllers
 
 
 
-        [HttpPost("{imdbID}")]
-        [Produces("application/json")]
-        public async Task<IActionResult> CreateMovieRental([FromRoute] string imdbID, [FromBody] CreateOMDbRequestModel model)
-        {
-            try
-            {
-                var queryMovie = await _oMDbAPIService.GetMoviesByImdb(imdbID);
-                var request = await _oMDbAPIService.CreateMovieRental(model, queryMovie);
-
-                // Configura o cabeçalho Content-Type para application/json
-                Response.Headers.Add("Accept", "application/json");
-
-
-                // Retorna um objeto serializado como JSON
-                return Ok(request);
-            }
-            catch (Exception ex)
-            {
-                // Em caso de erro, você pode retornar uma resposta de erro adequada
-                return BadRequest(new { error = ex.Message });
-            }
-        }
-
         //[HttpPost("{imdbID}")]
         //public async Task<IActionResult> CreateMovieRental([FromRoute] string imdbID, [FromBody] CreateOMDbRequestModel model)
         //{
-        //    var queryMovie = await _oMDbAPIService.GetMoviesByImdb(imdbID);
+        //    try
+        //    {
+        //        var queryMovie = await _oMDbAPIService.GetMoviesByImdb(imdbID);
+        //        var request = await _oMDbAPIService.CreateMovieRental(model, queryMovie);
 
-        //    var request = await _oMDbAPIService.CreateMovieRental(model, queryMovie);
+        //        // Configura o cabeçalho Content-Type para application/json
+        //        Response.Headers.Add("Accept", "application/json");
 
-        //    return Ok(request);
+
+        //        // Retorna um objeto serializado como JSON
+        //        return Ok(request);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // Em caso de erro, você pode retornar uma resposta de erro adequada
+        //        return BadRequest(new { error = ex.Message });
+        //    }
         //}
+
+
+        [HttpPost("{imdbID}")]
+        public async Task<IActionResult> CreateMovieRental([FromRoute] string imdbID, [FromBody] CreateOMDbRequestModel model)
+        {
+            var queryMovie = await _oMDbAPIService.GetMoviesByImdb(imdbID);
+
+            var request = await _oMDbAPIService.CreateMovieRental(model, queryMovie);
+
+            return Ok(request);
+        }
 
 
 
         [HttpDelete("rent/{rentId}")]
 
-        public async Task<IActionResult> DeleteRent([FromRoute] string rentId)
+        public async Task<IActionResult> DeleteRent([FromRoute] Guid rentId)
         {
 
             await _oMDbAPIService.DeleteRent(rentId);
