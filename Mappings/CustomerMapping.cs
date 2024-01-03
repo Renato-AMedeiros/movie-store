@@ -10,7 +10,7 @@ namespace renato_movie_store.Mappings
             var customerResponse = new CustomerMappingModel
             {
                 CustomerId = customerContext.CustomerId,
-                Name = customerContext.CustomerName,
+                CustomerName = customerContext.CustomerName,
                 Genero = customerContext.Genero,
                 Email = customerContext.Email,
                 Age = customerContext.Age,

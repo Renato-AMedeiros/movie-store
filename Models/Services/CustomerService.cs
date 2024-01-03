@@ -23,11 +23,9 @@ namespace renato_movie_store.Models.Services
             if (validEmail)
                 throw new ConflictException("email already exists.", "customer.email_already_registered");
 
-
-
             var customer = new Customer()
             {
-                CustomerId = Guid.NewGuid().ToString(),
+                CustomerId = Guid.NewGuid(),
                 CustomerName = model.CustomerName,
                 Genero = model.Genero,
                 Email = model.Email,
@@ -38,6 +36,7 @@ namespace renato_movie_store.Models.Services
                 Country = model.Country,
                 PhoneNumber = model.PhoneNumber,
                 CreateDate = DateTime.UtcNow,
+                Status = RentStatusEnum.INACTIVE
             };
 
             _movieStoreDbContext.Customers.Add(customer);
@@ -77,9 +76,9 @@ namespace renato_movie_store.Models.Services
             return customers;
         }
 
-        public async Task<Customer> GetCustomerById(string customerId)
+        public  Customer GetCustomerById(Guid customerId)
         {
-            var query = await _movieStoreDbContext.Customers.FirstOrDefaultAsync(x => x.CustomerId == customerId);
+            var query =  _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
             if (query == null)
                 throw new BadRequestException("customer is inactive", "customer.is_inactive");
@@ -115,9 +114,9 @@ namespace renato_movie_store.Models.Services
             return customers;
         }
 
-        public async Task<Customer> UpdateCustomer(UpdateCustomerRequestModel model, string customerId)
+        public async Task<Customer> UpdateCustomer(UpdateCustomerRequestModel model, Guid customerId)
         {
-            var customer = await GetCustomerById(customerId);
+            var customer = GetCustomerById(customerId);
 
             if (model != null)
             {
@@ -149,11 +148,11 @@ namespace renato_movie_store.Models.Services
             return customer;
         }
 
-        public async Task DeleteCustomer(string customerId)
+        public async Task DeleteCustomer(Guid customerId)
         {
-            var customer = await GetCustomerById(customerId);
+            var customer = GetCustomerById(customerId);
 
-            if(customer.Status == CustomerStatusEnum.ACTIVE)
+            if (customer.Status == CustomerStatusEnum.ACTIVE)
                 throw new ForbiddenException("active user with rented movie", "customer.active_user_with_rented_movie");
 
             _movieStoreDbContext.Customers.Remove(customer);

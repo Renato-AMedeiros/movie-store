@@ -18,9 +18,9 @@ namespace renato_movie_store.Filters
 
         public string Type { get; set; }
 
-        public string CustomerId { get; set; }
+        public Guid? CustomerId { get; set; }
 
-        public int CPF { get; set; }
+        public string CPF { get; set; }
 
         public DateTime CreateDate { get; set; }
 

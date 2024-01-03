@@ -152,7 +152,7 @@ namespace renato_movie_store.Models.Services
         }
 
 
-        public async Task<List<RentHistory>> GetRentalsList(RentHistoryFilter filter, string customerId)
+        public async Task<List<RentHistory>> GetRentalsList(RentHistoryFilter filter, Guid customerId)
         {
             var customer = _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
@@ -176,9 +176,9 @@ namespace renato_movie_store.Models.Services
                     list = list.Where(x => x.Type == filter.Type);
                 }
 
-                if (!string.IsNullOrEmpty(filter.CustomerId))
+                if (filter.CustomerId.HasValue)
                 {
-                    list = list.Where(x => x.CustomerId == filter.CustomerId);
+                    list = list.Where(x => x.CustomerId == filter.CustomerId.Value);
                 }
 
                 if (!string.IsNullOrEmpty(filter.CreateDate.ToString()))

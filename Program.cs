@@ -23,6 +23,7 @@ namespace renato_movie_store
             
 
             builder.Services.AddScoped<OMDbAPIService>();
+            builder.Services.AddScoped<CustomerService>();
 
             var app = builder.Build();
 

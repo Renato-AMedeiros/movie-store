@@ -8,7 +8,7 @@ namespace renato_movie_store.Models.CustomerModel
     public class CreateCustomerRequestModel
     {
         [JsonProperty("customer_id")]
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
 
         [JsonProperty("customer_name")]
         public string CustomerName { get; set; }
@@ -23,7 +23,7 @@ namespace renato_movie_store.Models.CustomerModel
         public int Age { get; set; }
 
         [JsonProperty("cpf")]
-        public int CPF { get; set; }
+        public string CPF { get; set; }
 
         [JsonProperty("address")]
         public string Address { get; set; }
@@ -35,7 +35,7 @@ namespace renato_movie_store.Models.CustomerModel
         public string Country { get; set; }
 
         [JsonProperty("phone_number")]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         [JsonConverter(typeof(IsoDateConverter))]
         [JsonProperty("create_date")]

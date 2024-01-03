@@ -8,7 +8,7 @@ namespace renato_movie_store.Filters
 
 
         [JsonProperty("customerId")]
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
 
         [JsonProperty("name")]
         public string Name{ get; set; }
@@ -77,7 +77,7 @@ namespace renato_movie_store.Filters
         public string Response { get; set; }
 
         [JsonProperty("cpf")]
-        public int CPF { get; set; }
+        public string CPF { get; set; }
 
         [JsonConverter(typeof(IsoDateConverter))]
         [JsonProperty("create_date")]

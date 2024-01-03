@@ -10,10 +10,10 @@ namespace renato_movie_store.Models.OMDbModel
 
 
         [JsonProperty("cpf")]
-        public int CPF{ get; set; }
+        public string CPF{ get; set; }
 
         [JsonProperty("custumerId")]
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
 
         [JsonProperty("customer_name")]
         public string CustomerName { get; set; }

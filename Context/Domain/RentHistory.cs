@@ -18,7 +18,7 @@ namespace renato_movie_store.Context.Model
 
         public string Type { get; set; }
 
-        public int CPF { get; set; }
+        public string CPF { get; set; }
 
         public DateTime CreateDate { get; set; }
 
@@ -29,7 +29,7 @@ namespace renato_movie_store.Context.Model
 
 
 
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
         public Customer Customer { get; set; }
     }
 }

@@ -13,7 +13,7 @@ namespace renato_movie_store.Context.Model
         }
 
         [Key]
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
 
         public string Status { get; set; }
 
@@ -33,8 +33,8 @@ namespace renato_movie_store.Context.Model
         public int Age { get; set; }
 
         [Required(ErrorMessage = "O CPF é obrigatório.")]
-        [Range(0, 99999999999, ErrorMessage = "O CPF deve estar entre 0 e 99999999999.")]
-        public int CPF { get; set; }
+        [StringLength(11)]
+        public string CPF { get; set; }
 
 
         public string Address { get; set; }
@@ -46,7 +46,7 @@ namespace renato_movie_store.Context.Model
         public string Country { get; set; }
 
 
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
 
         public DateTime CreateDate { get; set; }

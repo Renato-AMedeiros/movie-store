@@ -29,16 +29,16 @@ namespace renato_movie_store.Controllers
         }
 
         [HttpGet("{customerId}")]
-        public async Task<IActionResult> GetCustomerById([FromRoute] string customerId)
+        public async Task<IActionResult> GetCustomerById([FromRoute] Guid customerId)
         {
-            var customerById = await _customerService.GetCustomerById(customerId);
+            var customerById =  _customerService.GetCustomerById(customerId);
 
             var response = CustomerMapping.CustomerMap(customerById);
 
             return Ok(response);
         }
 
-        [HttpGet("{customerName}")]
+        [HttpGet("name/{customerName}")]
         public async Task<IActionResult> GetCustomerName([FromRoute] string customerName, bool searchByInitial = false)
         {
             var customer = await _customerService.GetCustomersByName(customerName, searchByInitial);
@@ -59,7 +59,7 @@ namespace renato_movie_store.Controllers
         }
 
         [HttpPut("{customerid}")]
-        public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerRequestModel model, string customerId)
+        public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerRequestModel model, Guid customerId)
         {
             var customer = await _customerService.UpdateCustomer(model, customerId);
 
@@ -69,7 +69,7 @@ namespace renato_movie_store.Controllers
         }
 
         [HttpDelete("{cusotmerid}")]
-        public async Task<IActionResult> DeleteCustomer(string customerId)
+        public async Task<IActionResult> DeleteCustomer(Guid customerId)
         {
             await _customerService.DeleteCustomer(customerId);
             return NoContent();

@@ -6,7 +6,7 @@
 
         public string? CustomerName { get; set; }
 
-        public string? CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
 
         public DateTime LoginCreateDate { get; set; }
     }

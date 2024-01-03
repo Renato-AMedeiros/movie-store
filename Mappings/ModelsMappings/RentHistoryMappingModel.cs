@@ -8,8 +8,8 @@ namespace renato_movie_store.Mappings.ModelsMappings
         [JsonProperty("rentId")]
         public string RentId { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("customer_name")]
+        public string CustomerName { get; set; }
 
         [JsonProperty("imdbId")]
         public string ImdbId { get; set; }
@@ -21,10 +21,10 @@ namespace renato_movie_store.Mappings.ModelsMappings
         public string Type { get; set; }
 
         [JsonProperty("customerId")]
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
 
         [JsonProperty("cpf")]
-        public int CPF { get; set; }
+        public string CPF { get; set; }
 
         [JsonConverter(typeof(IsoDateConverter))]
         [JsonProperty("create_date")]

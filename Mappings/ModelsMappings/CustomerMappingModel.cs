@@ -6,10 +6,10 @@ namespace renato_movie_store.Mappings.ModelsMappings
     public class CustomerMappingModel
     {
         [JsonProperty("customer_id")]
-        public string CustomerId { get; set; }
+        public Guid CustomerId { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("customer_name")]
+        public string CustomerName { get; set; }
 
         [JsonProperty("genero")]
         public string Genero { get; set; }
@@ -21,7 +21,7 @@ namespace renato_movie_store.Mappings.ModelsMappings
         public int Age { get; set; }
 
         [JsonProperty("cpf")]
-        public int CPF { get; set; }
+        public string CPF { get; set; }
 
         [JsonProperty("address")]
         public string Address { get; set; }
@@ -33,7 +33,10 @@ namespace renato_movie_store.Mappings.ModelsMappings
         public string Country { get; set; }
 
         [JsonProperty("phone_number")]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
+
+        [JsonProperty("status")]
+        public string Status { get; set; }
 
         [JsonConverter(typeof(IsoDateConverter))]
         [JsonProperty("create_date")]

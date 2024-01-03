@@ -27,7 +27,7 @@ namespace renato_movie_store.Models.CustomerModel
         public string Country { get; set; }
 
         [JsonProperty("phone_number")]
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
         [JsonConverter(typeof(IsoDateConverter))]
         [JsonProperty("create_date")]
