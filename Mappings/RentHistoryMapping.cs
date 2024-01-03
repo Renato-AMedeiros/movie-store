@@ -10,7 +10,7 @@ namespace renato_movie_store.Mappings
             var rentHistoryResponse = new RentHistoryMappingModel
             {
                 RentId = rentHistoryContext.RentId,
-                Name = rentHistoryContext.Name,
+                Name = rentHistoryContext.CustomerName,
                 ImdbId = rentHistoryContext.ImdbId,
                 Title = rentHistoryContext.Title,
                 Type = rentHistoryContext.Type,

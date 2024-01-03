@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using renato_movie_store.Context;
 using renato_movie_store.Models.Services;
 
 namespace renato_movie_store
@@ -9,6 +11,10 @@ namespace renato_movie_store
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+
+
+            string mySqlConnection = builder.Configuration.GetConnectionString("DefaultConnection");
+            builder.Services.AddDbContext<MovieStoreDbContext>(options => options.UseMySql(mySqlConnection, ServerVersion.AutoDetect(mySqlConnection)));
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

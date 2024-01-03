@@ -3,7 +3,7 @@
     public class CustomerFilter
     {
         public string CustomerId { get; set; }
-        public string Name { get; set; }
+        public string CustomerName { get; set; }
         public string Genero { get; set; }
         public string Email { get; set; }
         public int Age { get; set; }

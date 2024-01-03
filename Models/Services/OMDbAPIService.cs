@@ -127,9 +127,9 @@ namespace renato_movie_store.Models.Services
                 };
 
                 rentHistory.RentId = model.RentId;
-                rentHistory.Name = model.Name;
+                rentHistory.CustomerName = model.CustomerName;
                 rentHistory.CreateDate = DateTime.UtcNow;
-                rentHistory.Name = model.Name;
+                rentHistory.CustomerName = model.CustomerName;
                 rentHistory.CPF = model.CPF;
                 rentHistory.CustomerId = model.CustomerId;
                 rentHistory.ExpireDate = model.ExpireDate;

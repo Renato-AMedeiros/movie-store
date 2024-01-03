@@ -15,8 +15,8 @@ namespace renato_movie_store.Models.OMDbModel
         [JsonProperty("custumerId")]
         public string CustomerId { get; set; }
 
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("customer_name")]
+        public string CustomerName { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }

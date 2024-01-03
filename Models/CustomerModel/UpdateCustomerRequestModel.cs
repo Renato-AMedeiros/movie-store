@@ -5,8 +5,8 @@ namespace renato_movie_store.Models.CustomerModel
 {
     public class UpdateCustomerRequestModel
     {
-        [JsonProperty("name")]
-        public string Name { get; set; }
+        [JsonProperty("customer_name")]
+        public string CustomerName { get; set; }
 
         [JsonProperty("genero")]
         public string Genero { get; set; }

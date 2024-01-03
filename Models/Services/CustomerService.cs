@@ -28,7 +28,7 @@ namespace renato_movie_store.Models.Services
             var customer = new Customer()
             {
                 CustomerId = Guid.NewGuid().ToString(),
-                Name = model.Name,
+                CustomerName = model.CustomerName,
                 Genero = model.Genero,
                 Email = model.Email,
                 Age = model.Age,
@@ -52,9 +52,9 @@ namespace renato_movie_store.Models.Services
 
             if (filter != null)
             {
-                if (!string.IsNullOrEmpty(filter.Name))
+                if (!string.IsNullOrEmpty(filter.CustomerName))
                 {
-                    query = query.Where(x => x.Name.Contains(filter.Name));
+                    query = query.Where(x => x.CustomerName.Contains(filter.CustomerName));
                 }
 
                 if (!string.IsNullOrEmpty(filter.Genero))
@@ -97,12 +97,12 @@ namespace renato_movie_store.Models.Services
             if (searchByInitial)
             {
                 // Se estiver procurando por inicial, filtre com base na inicial do nome
-                query = query.Where(x => x.Name.ToLower().StartsWith(searchName));
+                query = query.Where(x => x.CustomerName.ToLower().StartsWith(searchName));
             }
             else
             {
                 // Se estiver procurando por nome completo, filtre com base no nome completo
-                query = query.Where(x => x.Name.ToLower().Contains(searchName));
+                query = query.Where(x => x.CustomerName.ToLower().Contains(searchName));
             }
 
             var customers = await query.ToListAsync();
@@ -121,8 +121,8 @@ namespace renato_movie_store.Models.Services
 
             if (model != null)
             {
-                if (!string.IsNullOrEmpty(model.Name))
-                    customer.Name = model.Name;
+                if (!string.IsNullOrEmpty(model.CustomerName))
+                    customer.CustomerName = model.CustomerName;
 
                 if (!string.IsNullOrEmpty(model.Genero))
                     customer.Genero = model.Genero;
