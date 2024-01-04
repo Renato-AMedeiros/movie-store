@@ -28,8 +28,6 @@ namespace renato_movie_store.Context.Model
         public DateTime? ExpireDate { get; set; }
         
 
-
-
         public Guid CustomerId { get; set; }
 
         [JsonIgnore]

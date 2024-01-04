@@ -8,8 +8,8 @@ namespace renato_movie_store.Models.CustomerModel
         [JsonProperty("customer_name")]
         public string CustomerName { get; set; }
 
-        [JsonProperty("genero")]
-        public string Genero { get; set; }
+        [JsonProperty("gender")]
+        public string Gender { get; set; }
 
         [JsonProperty("email")]
         public string? Email { get; set; }

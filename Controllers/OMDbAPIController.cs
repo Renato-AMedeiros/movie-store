@@ -48,7 +48,9 @@ namespace renato_movie_store.Controllers
 
             var request = await _oMDbAPIService.CreateMovieRental(model, queryMovie);
 
-            return Ok(request);
+            var result = RentHistoryMapping.RentHistoryMap(request);
+
+            return Ok(result);
         }
 
 

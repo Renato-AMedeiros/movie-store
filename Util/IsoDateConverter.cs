@@ -7,7 +7,7 @@ namespace renato_movie_store.Util
     {
         public IsoDateConverter()
         {
-            DateTimeFormat = "yyyy-MM-dd\\THH:mm:ss\\Z";
+            DateTimeFormat = "yyyy-MM-dd";   /*\\THH:mm:ss\\Z"*/
             DateTimeStyles = DateTimeStyles.RoundtripKind;
         }
     }

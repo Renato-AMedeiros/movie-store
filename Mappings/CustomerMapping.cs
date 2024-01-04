@@ -11,7 +11,7 @@ namespace renato_movie_store.Mappings
             {
                 CustomerId = customerContext.CustomerId,
                 CustomerName = customerContext.CustomerName,
-                Genero = customerContext.Genero,
+                Gender = customerContext.Gender,
                 Email = customerContext.Email,
                 Age = customerContext.Age,
                 CPF = customerContext.CPF,

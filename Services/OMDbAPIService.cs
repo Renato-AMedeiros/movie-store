@@ -88,11 +88,6 @@ namespace renato_movie_store.Services
         }
 
 
-
-
-
-
-
         public async Task<RentHistory> CreateMovieRental(CreateOMDbRequestModel model, OMDbAPIFilter queryMovie)
         {
 
@@ -132,7 +127,7 @@ namespace renato_movie_store.Services
                     rentHistory.CreateDate = DateTime.UtcNow;
                     rentHistory.CustomerName = customer.CustomerName;
                     rentHistory.CPF = customer.CPF;
-                    rentHistory.CustomerId = model.CustomerId;
+                    rentHistory.CustomerId = customer.CustomerId;
                     rentHistory.ExpireDate = model.ExpireDate;
                     rentHistory.Status = RentStatusEnum.ACTIVE;
                     _movieStoreDbContext.RentalHistories.Add(rentHistory);
@@ -156,7 +151,7 @@ namespace renato_movie_store.Services
 
         public async Task<List<RentHistory>> GetRentalsList()
         {
-            var list = _movieStoreDbContext.RentalHistories.AsQueryable();
+            var list = _movieStoreDbContext.RentalHistories.AsQueryable().OrderByDescending(x =>x.CreateDate);
 
             var queryList = await list.ToListAsync();
             return queryList;

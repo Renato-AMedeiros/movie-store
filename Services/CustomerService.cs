@@ -30,7 +30,7 @@ namespace renato_movie_store.Services
             {
                 CustomerId = Guid.NewGuid(),
                 CustomerName = model.CustomerName,
-                Genero = model.Genero,
+                Gender = model.Gender,
                 Email = model.Email,
                 Age = model.Age,
                 CPF = model.CPF,
@@ -50,7 +50,7 @@ namespace renato_movie_store.Services
 
         public async Task<List<Customer>> GetCustomersList()
         {
-            var query = _movieStoreDbContext.Customers.AsQueryable();
+            var query = _movieStoreDbContext.Customers.AsQueryable().OrderByDescending(x => x.CreateDate);
 
             var customers = await query.ToListAsync();
             return customers;
@@ -103,8 +103,8 @@ namespace renato_movie_store.Services
                 if (!string.IsNullOrEmpty(model.CustomerName))
                     customer.CustomerName = model.CustomerName;
 
-                if (!string.IsNullOrEmpty(model.Genero))
-                    customer.Genero = model.Genero;
+                if (!string.IsNullOrEmpty(model.Gender))
+                    customer.Gender = model.Gender;
 
                 if (!string.IsNullOrEmpty(model.Email))
                 {

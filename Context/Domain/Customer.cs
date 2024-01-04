@@ -23,7 +23,7 @@ namespace renato_movie_store.Context.Model
 
         [Required(ErrorMessage = "O Genero é obrigatório.")]
         [StringLength(50)]
-        public string Genero { get; set; }
+        public string Gender { get; set; }
 
         [Required(ErrorMessage = "O Email é obrigatório.")]
         [StringLength(400)]
