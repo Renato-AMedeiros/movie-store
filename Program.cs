@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using renato_movie_store.Context;
-using renato_movie_store.Models.Services;
+using renato_movie_store.Services;
 
 namespace renato_movie_store
 {

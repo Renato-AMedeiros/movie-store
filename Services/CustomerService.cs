@@ -5,7 +5,7 @@ using renato_movie_store.Filters;
 using renato_movie_store.Models.CustomerModel;
 using renato_movie_store.Util;
 
-namespace renato_movie_store.Models.Services
+namespace renato_movie_store.Services
 {
     public class CustomerService
     {
@@ -76,9 +76,9 @@ namespace renato_movie_store.Models.Services
             return customers;
         }
 
-        public  Customer GetCustomerById(Guid customerId)
+        public Customer GetCustomerById(Guid customerId)
         {
-            var query =  _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
+            var query = _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
             if (query == null)
                 throw new BadRequestException("customer is inactive", "customer.is_inactive");

@@ -9,7 +9,7 @@ using renato_movie_store.Util;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace renato_movie_store.Models.Services
+namespace renato_movie_store.Services
 {
     public class OMDbAPIService
     {
@@ -37,7 +37,7 @@ namespace renato_movie_store.Models.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var jsonString = await response.Content.ReadAsStringAsync();
-                        filter = Newtonsoft.Json.JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
+                        filter = JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
 
                     }
                     else
@@ -71,7 +71,7 @@ namespace renato_movie_store.Models.Services
                     if (response.IsSuccessStatusCode)
                     {
                         var jsonString = await response.Content.ReadAsStringAsync();
-                        filter = Newtonsoft.Json.JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
+                        filter = JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
 
                     }
                     else
@@ -116,7 +116,7 @@ namespace renato_movie_store.Models.Services
                 var rentedMovie = _movieStoreDbContext.RentalHistories.Any(x => x.ImdbId == queryMovie.ImdbID && x.Status == RentStatusEnum.ACTIVE);
 
                 if (rentedMovie)
-                throw new ForbiddenException("movie already rented", "OMDbAPI.movie_already_rented");
+                    throw new ForbiddenException("movie already rented", "OMDbAPI.movie_already_rented");
 
                 var responseSerialize = JsonConvert.SerializeObject(queryMovie);
                 //var responseSerialize = JsonSerializer.Serialize(queryMovie, new JsonSerializerOptions
@@ -147,8 +147,8 @@ namespace renato_movie_store.Models.Services
                 rentHistory.Status = RentStatusEnum.ACTIVE;
 
                 _movieStoreDbContext.RentalHistories.Add(rentHistory);
-           
-                if(customer.Status == CustomerStatusEnum.INACTIVE)
+
+                if (customer.Status == CustomerStatusEnum.INACTIVE)
                 {
                     customer.Status = CustomerStatusEnum.ACTIVE;
                 }

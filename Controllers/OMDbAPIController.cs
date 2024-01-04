@@ -3,7 +3,7 @@ using renato_movie_store.Context.Model;
 using renato_movie_store.Filters;
 using renato_movie_store.Mappings;
 using renato_movie_store.Models.OMDbModel;
-using renato_movie_store.Models.Services;
+using renato_movie_store.Services;
 
 namespace renato_movie_store.Controllers
 {
