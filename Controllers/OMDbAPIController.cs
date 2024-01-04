@@ -26,11 +26,11 @@ namespace renato_movie_store.Controllers
         }      
         
         
-        [HttpGet("rent/{customerId}")]
+        [HttpGet("rentals")]
 
-        public async Task<IActionResult> GetRentalsList([FromRoute] RentHistoryFilter filter, Guid customerId)
+        public async Task<IActionResult> GetRentalsList()
         {
-            var rentalList = await _oMDbAPIService.GetRentalsList(filter, customerId);
+            var rentalList = await _oMDbAPIService.GetRentalsList();
 
             var response =  rentalList.Select(RentHistoryMapping.RentHistoryMap).ToList();
 
@@ -39,30 +39,9 @@ namespace renato_movie_store.Controllers
 
 
 
-        //[HttpPost("{imdbID}")]
-        //public async Task<IActionResult> CreateMovieRental([FromRoute] string imdbID, [FromBody] CreateOMDbRequestModel model)
-        //{
-        //    try
-        //    {
-        //        var queryMovie = await _oMDbAPIService.GetMoviesByImdb(imdbID);
-        //        var request = await _oMDbAPIService.CreateMovieRental(model, queryMovie);
-
-        //        // Configura o cabeçalho Content-Type para application/json
-        //        Response.Headers.Add("Accept", "application/json");
 
 
-        //        // Retorna um objeto serializado como JSON
-        //        return Ok(request);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Em caso de erro, você pode retornar uma resposta de erro adequada
-        //        return BadRequest(new { error = ex.Message });
-        //    }
-        //}
-
-
-        [HttpPost("{imdbID}")]
+        [HttpPost("{imdbId}")]
         public async Task<IActionResult> CreateMovieRental([FromRoute] string imdbID, [FromBody] CreateOMDbRequestModel model)
         {
             var queryMovie = await _oMDbAPIService.GetMoviesByImdb(imdbID);
@@ -74,12 +53,12 @@ namespace renato_movie_store.Controllers
 
 
 
-        [HttpDelete("rent/{rentId}")]
+        [HttpDelete("rent/{rentId}/{customerId}")]
 
-        public async Task<IActionResult> DeleteRent([FromRoute] Guid rentId)
+        public async Task<IActionResult> DeleteRent([FromRoute] Guid rentId, Guid customerId)
         {
 
-            await _oMDbAPIService.DeleteRent(rentId);
+            await _oMDbAPIService.DeleteRent(rentId, customerId);
 
             return NoContent();
         }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using renato_movie_store.Context;
 using renato_movie_store.Context.Model;
-using renato_movie_store.Filters;
 using renato_movie_store.Models.CustomerModel;
 using renato_movie_store.Util;
 
@@ -19,8 +18,12 @@ namespace renato_movie_store.Services
         {
 
             var validEmail = _movieStoreDbContext.Customers.Any(x => x.Email == model.Email);
+            var validCPF = _movieStoreDbContext.Customers.Any(x => x.CPF == model.CPF);
 
             if (validEmail)
+                throw new ConflictException("email already exists.", "customer.email_already_registered");
+
+            if (validCPF)
                 throw new ConflictException("email already exists.", "customer.email_already_registered");
 
             var customer = new Customer()
@@ -45,32 +48,9 @@ namespace renato_movie_store.Services
             return customer;
         }
 
-        public async Task<List<Customer>> GetCustomersList(CustomerFilter filter)
+        public async Task<List<Customer>> GetCustomersList()
         {
             var query = _movieStoreDbContext.Customers.AsQueryable();
-
-            if (filter != null)
-            {
-                if (!string.IsNullOrEmpty(filter.CustomerName))
-                {
-                    query = query.Where(x => x.CustomerName.Contains(filter.CustomerName));
-                }
-
-                if (!string.IsNullOrEmpty(filter.Genero))
-                {
-                    query = query.Where(x => x.Genero == filter.Genero);
-                }
-
-                if (!string.IsNullOrEmpty(filter.Email))
-                {
-                    query = query.Where(x => x.Email.Contains(filter.Email));
-                }
-
-                if (!string.IsNullOrEmpty(filter.Age.ToString()))
-                {
-                    query = query.Where(x => x.Age == filter.Age);
-                }
-            }
 
             var customers = await query.ToListAsync();
             return customers;
@@ -127,7 +107,14 @@ namespace renato_movie_store.Services
                     customer.Genero = model.Genero;
 
                 if (!string.IsNullOrEmpty(model.Email))
+                {
+                    var validEmail = _movieStoreDbContext.Customers.Any(x => x.Email == model.Email);
+
+                    if (validEmail)
+                        throw new ConflictException("email already exists.", "customer.email_already_registered");
+
                     customer.Email = model.Email;
+                }
 
                 if (!string.IsNullOrEmpty(model.PhoneNumber.ToString()))
                     customer.PhoneNumber = model.PhoneNumber;
@@ -140,6 +127,15 @@ namespace renato_movie_store.Services
 
                 if (!string.IsNullOrEmpty(model.Address))
                     customer.Address = model.Address;
+
+                if (model.Age >= 14)
+                {
+                    customer.Age = model.Age;
+                }
+                else
+                {
+                    throw new ForbiddenException("user under 14 years old", "OMDbAPI.user_under_14_years_old");
+                }
 
                 customer.UpdateDate = DateTime.UtcNow;
 
@@ -158,10 +154,6 @@ namespace renato_movie_store.Services
             _movieStoreDbContext.Customers.Remove(customer);
             await _movieStoreDbContext.SaveChangesAsync();
         }
-
-
-
-
 
     }
 }

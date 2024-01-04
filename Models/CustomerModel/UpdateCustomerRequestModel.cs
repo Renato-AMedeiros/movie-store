@@ -12,7 +12,7 @@ namespace renato_movie_store.Models.CustomerModel
         public string Genero { get; set; }
 
         [JsonProperty("email")]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [JsonProperty("age")]
         public int Age { get; set; }
@@ -29,13 +29,13 @@ namespace renato_movie_store.Models.CustomerModel
         [JsonProperty("phone_number")]
         public string PhoneNumber { get; set; }
 
-        [JsonConverter(typeof(IsoDateConverter))]
-        [JsonProperty("create_date")]
-        public DateTime CreateDate { get; set; }
+        //[JsonConverter(typeof(IsoDateConverter))]
+        //[JsonProperty("create_date")]
+        //public DateTime CreateDate { get; set; }
 
-        [JsonConverter(typeof(IsoDateConverter))]
-        [JsonProperty("update_date")]
-        public DateTime? UpdateDate { get; set; }
+        //[JsonConverter(typeof(IsoDateConverter))]
+        //[JsonProperty("update_date")]
+        //public DateTime? UpdateDate { get; set; }
 
     }
 }

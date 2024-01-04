@@ -119,49 +119,31 @@ namespace renato_movie_store.Services
                     throw new ForbiddenException("movie already rented", "OMDbAPI.movie_already_rented");
 
                 var responseSerialize = JsonConvert.SerializeObject(queryMovie);
-                //var responseSerialize = JsonSerializer.Serialize(queryMovie, new JsonSerializerOptions
-                //{
-                //    ReferenceHandler = ReferenceHandler.Preserve                   
-                //});
+
                 var response = JsonConvert.DeserializeObject<OMDbAPIFilter>(responseSerialize);
-                //var response = JsonSerializer.Deserialize<OMDbAPIFilter>(responseSerialize, new JsonSerializerOptions
-                //{
-                //    ReferenceHandler = ReferenceHandler.Preserve
-                //    // Outras opções, se necessário
-                //});
 
-                var rentHistory = new RentHistory
+                var rentHistory = new RentHistory();
                 {
-                    ImdbId = response.ImdbID,
-                    Title = response.Title,
-                    Type = response.Type
+                    rentHistory.RentId = Guid.NewGuid();
+                    rentHistory.ImdbId = response.ImdbID;
+                    rentHistory.Title = response.Title;
+                    rentHistory.Type = response.Type;
+                    rentHistory.CustomerName = customer.CustomerName;
+                    rentHistory.CreateDate = DateTime.UtcNow;
+                    rentHistory.CustomerName = customer.CustomerName;
+                    rentHistory.CPF = customer.CPF;
+                    rentHistory.CustomerId = model.CustomerId;
+                    rentHistory.ExpireDate = model.ExpireDate;
+                    rentHistory.Status = RentStatusEnum.ACTIVE;
+                    _movieStoreDbContext.RentalHistories.Add(rentHistory);
                 };
-
-                rentHistory.RentId = Guid.NewGuid();
-                rentHistory.CustomerName = model.CustomerName;
-                rentHistory.CreateDate = DateTime.UtcNow;
-                rentHistory.CustomerName = model.CustomerName;
-                rentHistory.CPF = model.CPF;
-                rentHistory.CustomerId = model.CustomerId;
-                rentHistory.ExpireDate = model.ExpireDate;
-                rentHistory.Status = RentStatusEnum.ACTIVE;
-
-                _movieStoreDbContext.RentalHistories.Add(rentHistory);
 
                 if (customer.Status == CustomerStatusEnum.INACTIVE)
                 {
                     customer.Status = CustomerStatusEnum.ACTIVE;
                 }
 
-                try
-                {
-                    await _movieStoreDbContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-
-                    throw ex;
-                }
+                await _movieStoreDbContext.SaveChangesAsync();
 
                 return rentHistory;
             }
@@ -172,45 +154,9 @@ namespace renato_movie_store.Services
         }
 
 
-        public async Task<List<RentHistory>> GetRentalsList(RentHistoryFilter filter, Guid customerId)
+        public async Task<List<RentHistory>> GetRentalsList()
         {
-            var customer = _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
-
             var list = _movieStoreDbContext.RentalHistories.AsQueryable();
-
-            if (customer != null)
-            {
-
-                if (!string.IsNullOrEmpty(filter.Name))
-                {
-                    list = list.Where(x => x.Title == filter.Title);
-                }
-
-                if (!string.IsNullOrEmpty(filter.Title))
-                {
-                    list = list.Where(x => x.Title == filter.Title);
-                }
-
-                if (!string.IsNullOrEmpty(filter.Type))
-                {
-                    list = list.Where(x => x.Type == filter.Type);
-                }
-
-                if (filter.CustomerId.HasValue)
-                {
-                    list = list.Where(x => x.CustomerId == filter.CustomerId.Value);
-                }
-
-                if (!string.IsNullOrEmpty(filter.CreateDate.ToString()))
-                {
-                    list = list.Where(x => x.CreateDate == filter.CreateDate);
-                }
-
-                if (!string.IsNullOrEmpty(filter.ExpireDate.ToString()))
-                {
-                    list = list.Where(x => x.ExpireDate == filter.ExpireDate);
-                }
-            }
 
             var queryList = await list.ToListAsync();
             return queryList;
@@ -218,15 +164,28 @@ namespace renato_movie_store.Services
 
 
 
-        public async Task DeleteRent(Guid rentId)
+        public async Task DeleteRent(Guid rentId, Guid customerId)
         {
             var rent = await _movieStoreDbContext.RentalHistories.FirstOrDefaultAsync(x => x.RentId == rentId);
 
-            if (rent != null)
+            if (rent == null)
                 throw new BadRequestException("rent not exist", "OMDbAPI.rent_does_not_exist");
+
+
 
             _movieStoreDbContext.RentalHistories.Remove(rent);
             await _movieStoreDbContext.SaveChangesAsync();
+
+            var customer = _movieStoreDbContext.RentalHistories.Any(x => x.CustomerId == customerId && x.Status == RentStatusEnum.ACTIVE);
+
+            if (!customer)
+            {
+                var customerDisable = _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
+                customerDisable.Status = CustomerStatusEnum.INACTIVE;
+
+                await _movieStoreDbContext.SaveChangesAsync();
+            }
+
         }
 
     }

@@ -18,17 +18,17 @@ namespace renato_movie_store.Controllers
             _customerService = customerService;
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetCustomersList([FromQuery] CustomerFilter filter)
+        [HttpGet("list")]
+        public async Task<IActionResult> GetCustomersList()
         {
-            var resultCustomerList = await _customerService.GetCustomersList(filter);
+            var resultCustomerList = await _customerService.GetCustomersList();
 
             var response = resultCustomerList.Select(CustomerMapping.CustomerMap).ToList();
 
             return Ok(resultCustomerList);
         }
 
-        [HttpGet("{customerId}")]
+        [HttpGet("id/{customerId}")]
         public async Task<IActionResult> GetCustomerById([FromRoute] Guid customerId)
         {
             var customerById =  _customerService.GetCustomerById(customerId);
@@ -58,7 +58,7 @@ namespace renato_movie_store.Controllers
             return Ok(result);
         }
 
-        [HttpPut("{customerid}")]
+        [HttpPut("{customerId}")]
         public async Task<IActionResult> UpdateCustomer([FromBody] UpdateCustomerRequestModel model, Guid customerId)
         {
             var customer = await _customerService.UpdateCustomer(model, customerId);
@@ -68,8 +68,8 @@ namespace renato_movie_store.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("{cusotmerid}")]
-        public async Task<IActionResult> DeleteCustomer(Guid customerId)
+        [HttpDelete("{customerId}")]
+        public async Task<IActionResult> DeleteCustomer ([FromRoute] Guid customerId)
         {
             await _customerService.DeleteCustomer(customerId);
             return NoContent();

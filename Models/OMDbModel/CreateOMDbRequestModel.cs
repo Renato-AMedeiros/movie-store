@@ -5,18 +5,15 @@ namespace renato_movie_store.Models.OMDbModel
 {
     public class CreateOMDbRequestModel
     {
-        [JsonProperty("rentId")]
-        public Guid RentId { get; set; }
-
 
         [JsonProperty("cpf")]
-        public string CPF{ get; set; }
+        public string? CPF{ get; set; }
 
         [JsonProperty("custumerId")]
         public Guid CustomerId { get; set; }
 
         [JsonProperty("customer_name")]
-        public string CustomerName { get; set; }
+        public string? CustomerName { get; set; }
 
         [JsonProperty("title")]
         public string Title { get; set; }
