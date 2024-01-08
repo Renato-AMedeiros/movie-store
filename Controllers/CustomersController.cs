@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using renato_movie_store.Filters;
 using renato_movie_store.Mappings;
 using renato_movie_store.Models.CustomerModel;
 using renato_movie_store.Services;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace renato_movie_store.Controllers
 {

@@ -23,8 +23,7 @@ namespace renato_movie_store.Controllers
             var movieList = await _oMDbAPIService.GetMoviesByName(name);
 
             return Ok(movieList);
-        }      
-        
+        }            
         
         [HttpGet("rentals")]
 
@@ -36,10 +35,6 @@ namespace renato_movie_store.Controllers
 
             return Ok(rentalList);
         }
-
-
-
-
 
         [HttpPost("{imdbId}")]
         public async Task<IActionResult> CreateMovieRental([FromRoute] string imdbID, [FromBody] CreateOMDbRequestModel model)
@@ -53,14 +48,12 @@ namespace renato_movie_store.Controllers
             return Ok(result);
         }
 
+        [HttpDelete("rent")]
 
-
-        [HttpDelete("rent/{rentId}/{customerId}")]
-
-        public async Task<IActionResult> DeleteRent([FromRoute] Guid rentId, Guid customerId)
+        public async Task<IActionResult> DeleteRent([FromBody] DeleteOMDbRentalModel model)
         {
 
-            await _oMDbAPIService.DeleteRent(rentId, customerId);
+            await _oMDbAPIService.DeleteRent(model);
 
             return NoContent();
         }

@@ -24,7 +24,7 @@ namespace renato_movie_store.Services
                 throw new ConflictException("email already exists.", "customer.email_already_registered");
 
             if (validCPF)
-                throw new ConflictException("email already exists.", "customer.email_already_registered");
+                throw new ConflictException("CPF already exists.", "customer.CPF_already_registered");
 
             var customer = new Customer()
             {

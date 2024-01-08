@@ -7,7 +7,6 @@ namespace renato_movie_store.Filters
     {
         public Guid RentId { get; set; }
 
-        [FromQuery(Name = "status")]
         public string Status { get; set; }
 
         public string Name { get; set; }

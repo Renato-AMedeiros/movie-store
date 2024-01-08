@@ -6,8 +6,6 @@ using renato_movie_store.Context.Model;
 using renato_movie_store.Filters;
 using renato_movie_store.Models.OMDbModel;
 using renato_movie_store.Util;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace renato_movie_store.Services
 {
@@ -27,27 +25,20 @@ namespace renato_movie_store.Services
 
             using (HttpClient client = new HttpClient())
             {
-                try
+                string apiKey = "69adc2cd";
+                string host = "http://www.omdbapi.com/?apikey=" + apiKey;
+
+                var response = await client.GetAsync($"{host}&t={name}");
+
+                if (response.IsSuccessStatusCode)
                 {
-                    string apiKey = "69adc2cd";
-                    string host = "http://www.omdbapi.com/?apikey=" + apiKey;
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    filter = JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
 
-                    var response = await client.GetAsync($"{host}&t={name}");
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var jsonString = await response.Content.ReadAsStringAsync();
-                        filter = JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
-
-                    }
-                    else
-                    {
-                        throw new BadRequestException("error host.", "OMDbAPI.https_error");
-                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    return null;
+                    throw new BadRequestException("error host.", "OMDbAPI.https_error");
                 }
             }
             return filter;
@@ -61,32 +52,23 @@ namespace renato_movie_store.Services
 
             using (HttpClient client = new HttpClient())
             {
-                try
+                string apiKey = "69adc2cd";
+                string host = "http://www.omdbapi.com/?apikey=" + apiKey;
+
+                var response = await client.GetAsync($"{host}&i={imdbID}");
+
+                if (response.IsSuccessStatusCode)
                 {
-                    string apiKey = "69adc2cd";
-                    string host = "http://www.omdbapi.com/?apikey=" + apiKey;
-
-                    var response = await client.GetAsync($"{host}&i={imdbID}");
-
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var jsonString = await response.Content.ReadAsStringAsync();
-                        filter = JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
-
-                    }
-                    else
-                    {
-                        throw new BadRequestException("error host.", "OMDbAPI.https_error");
-                    }
+                    var jsonString = await response.Content.ReadAsStringAsync();
+                    filter = JsonConvert.DeserializeObject<OMDbAPIFilter>(jsonString);
                 }
-                catch (Exception ex)
+                else
                 {
-                    return null;
+                    throw new BadRequestException("error host.", "OMDbAPI.https_error");
                 }
             }
             return filter;
         }
-
 
         public async Task<RentHistory> CreateMovieRental(CreateOMDbRequestModel model, OMDbAPIFilter queryMovie)
         {
@@ -100,9 +82,10 @@ namespace renato_movie_store.Services
                     throw new ForbiddenException("user under 14 years old", "OMDbAPI.user_under_14_years_old");
                 }
 
+                //validação se o cliente ja tem o limite de filmes alugados = 2
                 var activeRentalsCount = _movieStoreDbContext.RentalHistories.Count(x => x.CustomerId == model.CustomerId && x.Status == RentStatusEnum.ACTIVE);
 
-                if (activeRentalsCount >= 2)
+                if (activeRentalsCount == 2)
                 {
                     throw new ForbiddenException("maximum rentals reached", "OMDbAPI.maximum_rentals_reached");
                 }
@@ -148,40 +131,32 @@ namespace renato_movie_store.Services
             }
         }
 
-
         public async Task<List<RentHistory>> GetRentalsList()
         {
-            var list = _movieStoreDbContext.RentalHistories.AsQueryable().OrderByDescending(x =>x.CreateDate);
+            var list = await _movieStoreDbContext.RentalHistories.AsQueryable().OrderByDescending(x => x.CreateDate).ToListAsync();
 
-            var queryList = await list.ToListAsync();
-            return queryList;
+            return list;
         }
 
-
-
-        public async Task DeleteRent(Guid rentId, Guid customerId)
+        public async Task DeleteRent(DeleteOMDbRentalModel model)
         {
-            var rent = await _movieStoreDbContext.RentalHistories.FirstOrDefaultAsync(x => x.RentId == rentId);
+            var rent = await _movieStoreDbContext.RentalHistories.FirstOrDefaultAsync(x => x.RentId == model.RentId);
 
             if (rent == null)
                 throw new BadRequestException("rent not exist", "OMDbAPI.rent_does_not_exist");
 
-
-
             _movieStoreDbContext.RentalHistories.Remove(rent);
             await _movieStoreDbContext.SaveChangesAsync();
 
-            var customer = _movieStoreDbContext.RentalHistories.Any(x => x.CustomerId == customerId && x.Status == RentStatusEnum.ACTIVE);
+            var customer = _movieStoreDbContext.RentalHistories.Any(x => x.CustomerId == model.CustomerId && x.Status == RentStatusEnum.ACTIVE);
 
             if (!customer)
             {
-                var customerDisable = _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
+                var customerDisable = _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == model.CustomerId);
                 customerDisable.Status = CustomerStatusEnum.INACTIVE;
 
                 await _movieStoreDbContext.SaveChangesAsync();
             }
-
         }
-
     }
 }
