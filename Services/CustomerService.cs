@@ -61,7 +61,7 @@ namespace renato_movie_store.Services
             var query = _movieStoreDbContext.Customers.FirstOrDefault(x => x.CustomerId == customerId);
 
             if (query == null)
-                throw new BadRequestException("customer is inactive", "customer.is_inactive");
+                throw new BadRequestException("customer not exist", "customer.not_exist");
 
             return query;
         }
