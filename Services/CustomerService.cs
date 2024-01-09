@@ -134,7 +134,7 @@ namespace renato_movie_store.Services
                 }
                 else
                 {
-                    throw new ForbiddenException("user under 14 years old", "OMDbAPI.user_under_14_years_old");
+                    throw new ForbiddenException("user under 14 years old", "Customer.user_under_14_years_old");
                 }
 
                 customer.UpdateDate = DateTime.UtcNow;
